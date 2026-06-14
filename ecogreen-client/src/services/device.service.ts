@@ -66,11 +66,14 @@ export const toggleActuator = (
 
 export const getSensorReadings = (
   sensorId: string,
-  limit = 100
+  limit = 100,
+  startDate?: string,
+  endDate?: string
 ): Promise<SensorReading[]> => {
-  return fetcher<SensorReading[]>(
-    `/v1/sensors/${sensorId}/readings?limit=${limit}`
-  );
+  let url = `/v1/sensors/${sensorId}/readings?limit=${limit}`;
+  if (startDate) url += `&startDate=${startDate}`;
+  if (endDate) url += `&endDate=${endDate}`;
+  return fetcher<SensorReading[]>(url);
 };
 
 export const setDeviceMode = (

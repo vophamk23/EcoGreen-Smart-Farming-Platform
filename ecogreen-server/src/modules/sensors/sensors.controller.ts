@@ -25,10 +25,14 @@ export class SensorsController {
   async getReadings(
     @Param('sensorId') sensorId: string,
     @Query('limit') limit: string,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
   ) {
     const readings = await this.sensorsService.getSensorReadings(
       sensorId,
       limit ? parseInt(limit) : 50,
+      startDate,
+      endDate,
     );
 
     return {

@@ -365,9 +365,28 @@ export class SensorsService {
     return this.prisma.sENSORS.findMany({ where: { Device_ID: deviceId } });
   }
 
-  async getSensorReadings(sensorId: string, limit: number) {
+  async getSensorReadings(
+    sensorId: string,
+    limit: number,
+    startDate?: string,
+    endDate?: string,
+  ) {
+    const whereClause: any = { Sensor_ID: sensorId };
+
+    if (startDate || endDate) {
+      whereClause.recorded_at = {};
+      if (startDate) {
+        whereClause.recorded_at.gte = new Date(startDate);
+      }
+      if (endDate) {
+        whereClause.recorded_at.lte = new Date(endDate);
+      }
+      // Khi lọc theo ngày, có thể số lượng rất lớn, ưu tiên tăng limit hoặc không limit
+      limit = limit > 500 ? limit : 2000;
+    }
+
     const readings = await this.prisma.sENSOR_READINGS.findMany({
-      where: { Sensor_ID: sensorId },
+      where: whereClause,
       orderBy: { recorded_at: 'desc' },
       take: limit,
     });

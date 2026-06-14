@@ -11,7 +11,7 @@
 static DHT dht(DHT_PIN, DHT_TYPE);
 
 // EMA (Exponential Moving Average) filter cho soil ADC
-// alpha = 0.2: giữ 80% giá trị cũ, 20% giá trị mới -> lọc nhiễu tốt
+// alpha = 0.8: giữ 20% giá trị cũ, 80% giá trị mới -> phản hồi nhanh hơn
 static const float SOIL_EMA_ALPHA = 0.2f;
 static float s_soilEMA = -1.0f; // -1 = chưa khởi tạo
 

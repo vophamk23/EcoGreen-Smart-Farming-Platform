@@ -291,11 +291,7 @@ export function HistoryView() {
     return next;
   }, [selectedDevice]);
 
-  const limit = useMemo(() => {
-    if (timeRange === "day") return 100;
-    if (timeRange === "week") return 300;
-    return 600;
-  }, [timeRange]);
+  const maxLimit = 2000;
 
   useEffect(() => {
     let mounted = true;
@@ -311,10 +307,21 @@ export function HistoryView() {
 
     const loadHistory = async () => {
       try {
+        const now = new Date();
+        let startDate: string | undefined;
+
+        if (timeRange === "day") {
+          startDate = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+        } else if (timeRange === "week") {
+          startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
+        } else if (timeRange === "month") {
+          startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString();
+        }
+
         const entries = await Promise.all(
           (Object.entries(metricSensors) as [MetricKey, Sensor][]).map(
             async ([metric, sensor]) => {
-              const readings = await getSensorReadings(sensor.Sensor_ID, limit);
+              const readings = await getSensorReadings(sensor.Sensor_ID, maxLimit, startDate);
               return [metric, readings] as const;
             }
           )
@@ -325,7 +332,7 @@ export function HistoryView() {
         }
 
         setPoints(
-          buildHistoryPoints(Object.fromEntries(entries), timeRange, locale).slice(-limit)
+          buildHistoryPoints(Object.fromEntries(entries), timeRange, locale).slice(-maxLimit)
         );
       } catch (err) {
         if (mounted) {
@@ -348,7 +355,7 @@ export function HistoryView() {
     return () => {
       mounted = false;
     };
-  }, [selectedDevice, metricSensors, limit, timeRange]);
+  }, [selectedDevice, metricSensors, timeRange, locale]);
 
   const latestAt = points.at(-1)?.recordedAt;
 

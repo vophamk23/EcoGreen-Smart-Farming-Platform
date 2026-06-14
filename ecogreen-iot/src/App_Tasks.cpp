@@ -186,7 +186,7 @@ void Task_CheckSchedule(void)
         ScheduleEntry_t &s = tmp[i]; // ← dùng bản sao
         if (!s.enabled)
             continue;
-        if (!(s.days & (1 << now.dayOfTheWeek())))
+        if (s.days != 0 && !(s.days & (1 << now.dayOfTheWeek())))
             continue;
         if (s.hour != now.hour())
             continue;

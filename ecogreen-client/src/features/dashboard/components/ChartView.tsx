@@ -59,7 +59,6 @@ const metricConfig: Record<
 };
 
 const limitOptions = [50, 100, 200, 300];
-
 function normalizeText(value?: string) {
   return (value ?? "")
     .toLowerCase()
