@@ -1,4 +1,4 @@
-# 🌿 EcoGreen IoT — Smart Greenhouse System
+# 🌿 EcoGreen IoT - Smart Greenhouse System
 
 **Nông nghiệp thông minh trong tầm tay - giám sát và điều khiển nhà kính theo thời gian thực**
 
